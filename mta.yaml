@@ -1,0 +1,42 @@
+ID: SurenderGIT
+_schema-version: '2.1'
+version: 0.0.1
+modules:
+  - name: Web
+    type: html5
+    path: Web
+    requires:
+      - name: UAA-service
+        group: UAA-service
+      - name: CORE_XSJS_api
+        group: destinations
+        properties:
+          name: CORE_XSJS-backend
+          url: '~{url}'
+          forwardAuthToken: true
+  - name: db
+    type: hdb
+    path: db
+    requires:
+      - name: hdi_db
+  - name: CORE_XSJS
+    type: nodejs
+    path: CORE_XSJS
+    provides:
+      - name: CORE_XSJS_api
+        properties:
+          url: '${default-url}'
+    requires:
+      - name: UAA-service
+      - name: hdi_db
+      - name: db
+resources:
+  - name: UAA-service
+    type: com.sap.xs.uaa-space
+  - name: hdi_db
+    parameters:
+      config:
+        schema: DB
+    properties:
+      hdi-container-name: '${service-name}'
+    type: com.sap.xs.hdi-container
